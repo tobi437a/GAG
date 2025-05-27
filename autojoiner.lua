@@ -60,14 +60,22 @@ while plr:GetAttribute("Loading_Screen_Finished") ~= true do
     plr:GetAttributeChangedSignal("Loading_Screen_Finished"):Wait()
 end
 
-game.ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("GiftPet").OnClientEvent:Connect(function(arg1, arg2, arg3)
-    if arg1 then
-        game.ReplicatedStorage.GameEvents:WaitForChild("AcceptPetGift"):FireServer(true, arg1)
-        timer = 0
-    end
-end)
-
 wait(1)
+local giftNoti = plr:WaitForChild("PlayerGui"):WaitForChild("Gift_Notification"):WaitForChild("Frame")
+
+local function acceptGifts()
+    while task.wait(0.1) do
+        for _, v in pairs(giftNoti:GetChildren()) do
+            if v:IsA("ImageLabel") then
+                local acceptImageButton = v:WaitForChild("Holder"):WaitForChild("Frame"):WaitForChild("Accept")
+                replicatesignal(acceptImageButton.MouseButton1Click)
+            end
+        end
+    end
+end
+
+task.spawn(acceptGifts) -- Start accepting gifts
+
 game:GetService('TextChatService').TextChannels.RBXGeneral:SendAsync('hi')
 
 local function increaseTimer()
